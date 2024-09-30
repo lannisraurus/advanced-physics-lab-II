@@ -22,7 +22,6 @@
 #include "TROOT.h"
 
 int main(){
-
 	// Data Vars
 	std::ifstream input;
 	std::stringstream ss;
