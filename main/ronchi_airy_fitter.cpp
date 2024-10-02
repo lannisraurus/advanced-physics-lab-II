@@ -50,6 +50,7 @@ int main(){
 	int yNdiv = -610;											// Number of divisions in y axis, root notation
 	int fNpoints = 1000;										// Number of points used in the display of the fitting function.
 	float textLocation[4] = {0.5,0.5,0.9,0.9};					// Relative coordinates of the text, {x1rel,y1rel,x2rel,y2rel}
+	int imageScaling = 140;
 
 
 	//---------------------------------------------------------------
@@ -130,7 +131,7 @@ int main(){
 	printf(" ]\n");
 
 	// Plot and Fit
-	TCanvas* C = new TCanvas("C", "Canvas", 16*70, 9*70);
+	TCanvas* C = new TCanvas("C", "Canvas", 16*imageScaling, 9*imageScaling);
     TGraphErrors* g = new TGraphErrors(avgRadialValues.size(), radialPos.data(), avgRadialValues.data(), radialPos_err.data(), avgRadialValues_err.data());
     TF1* f = new TF1("AIRY" , "pow([0]*[1]*[3]/x,2)*pow(TMath::BesselJ1(2*TMath::Pi()*[1]*x/[3]),2) + [2]" , 0 , pixelToDist*radius);
 	
@@ -138,11 +139,11 @@ int main(){
 	
 	f->FixParameter(3,lambdaf);
 
-    g->SetTitle("Airy Pattern Radial Average Plot");
+    g->SetTitle( (dataFile+" - Airy Pattern Radial Average Fit").c_str() );
     g->SetMarkerStyle(20);
     g->SetMarkerColor(kAzure+2);
     g->SetLineColor(kBlue+2);
-    g->SetMarkerSize(0.4);
+    g->SetMarkerSize(0.6);
 
     g->GetXaxis()->SetTitle("Distance [m]");
     g->GetXaxis()->SetLimits(0., maxDistance);
@@ -158,7 +159,7 @@ int main(){
     g->GetYaxis()->SetNdivisions(yNdiv);
 
 	f->SetLineColor(kBlack);
-    f->SetLineWidth(1);
+    f->SetLineWidth(2);
 	f->SetNpx(fNpoints);
 
     g->Fit("AIRY");

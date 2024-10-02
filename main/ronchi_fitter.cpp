@@ -58,7 +58,7 @@ int main(){
 	int xNdiv = -512;											// Number of divisions in x axis, root notation
 	int yNdiv = -610;											// Number of divisions in y axis, root notation
 	int fNpoints = 1000;										// Number of points used in the display of the fitting function.
-	float textLocation[4] = {0.6,0.6,0.95,0.95};					// Relative coordinates of the text, {x1rel,y1rel,x2rel,y2rel}
+	float textLocation[4] = {0.525,0.525,0.95,0.95};			// Relative coordinates of the text, {x1rel,y1rel,x2rel,y2rel}
 	int imageScaling = 140;
 
 	//---------------------------------------------------------------
@@ -104,7 +104,7 @@ int main(){
 	TCanvas* C = new TCanvas("C", "Canvas", 16*imageScaling, 9*imageScaling);
     TGraphErrors* g = new TGraphErrors(X.size(), X.data(), Y.data(), eX.data(), eY.data());
 
-    g->SetTitle("Ronchi Grid Fit");
+    g->SetTitle( (dataFile+" - Ronchi Grid Fit").c_str() );
     g->SetMarkerStyle(20);
     g->SetMarkerColor(kAzure+2);
     g->SetLineColor(kBlue+2);
@@ -142,7 +142,7 @@ int main(){
 
     TPaveText* pt = new TPaveText(textLocation[0]*maxDistance, textLocation[1]*maxLightValue, textLocation[2]*maxDistance, textLocation[3]*maxLightValue, "user");
 
-    pt->SetTextSize(0.025);
+    pt->SetTextSize(0.032);
     pt->SetFillColor(0);
     pt->SetTextAlign(12);
     pt->SetTextFont(42);
