@@ -29,8 +29,8 @@ int main(){
 	//                      INPUT PARAMETERS
 	//---------------------------------------------------------------
 	// Data file info
-	std::string dataFile = "data_in/AIRY_d1p5mm.pgm";			// Input data file, pgm
-	std::string resultFile = "data_out/AIRY_d1p5mm.png";		// Output fata file, png
+	std::string dataFile = "data_in/AIRY_d1p5mm.pgm";					// Input data file, pgm
+	std::string resultFile = "data_out/RONCHI1_airy_d1p5mm.png";		// Output fata file, png
 	double xAiry = 876, yAiry = 730;							// position of the airy pattern's center, in pixels
 	double drBin = 1;											// Size of the radial bin step, in pixels
 	double radius = 40;											// Radius of the pattern to gather, in pixels
@@ -49,7 +49,7 @@ int main(){
 	int xNdiv = -512;											// Number of divisions in x axis, root notation
 	int yNdiv = -610;											// Number of divisions in y axis, root notation
 	int fNpoints = 1000;										// Number of points used in the display of the fitting function.
-	float textLocation[4] = {0.5,0.9,0.5,0.9}					// Relative coordinates of the text, {x1rel,y1rel,x2rel,y2rel}
+	float textLocation[4] = {0.5,0.5,0.9,0.9};					// Relative coordinates of the text, {x1rel,y1rel,x2rel,y2rel}
 
 
 	//---------------------------------------------------------------
