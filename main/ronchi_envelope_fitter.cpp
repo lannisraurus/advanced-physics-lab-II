@@ -27,8 +27,8 @@ int main(){
 	//                      INPUT PARAMETERS
 	//---------------------------------------------------------------
 	// Data file info
-	std::string dataFile = "data_in/RONCHI1_d8p15mm_s32p8ms_diffraction_intensities.csv";	// Input data file, csv
-	std::string resultFile = "data_out/RONCHI1_d8p15mm_s32p8ms_envelope_fit.png";			// Output fata file, png
+	std::string dataFile = "bin/data_in/RONCHI1_d8p15mm_s32p8ms_diffraction_intensities.csv";	// Input data file, csv
+	std::string resultFile = "bin/data_out/RONCHI1_d8p15mm_s32p8ms_envelope_fit.png";			// Output fata file, png
 	// Physical System
 	double pixelToDist = ((3.69e-6)/0.5055);					// Conversion constant from pixels to real life distance, in metres 
 	double pixelToDist_err = (3.69e-6)*0.0073/(0.5055*0.5055);	// Error of the conversion factor, in metres

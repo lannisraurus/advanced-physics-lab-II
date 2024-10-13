@@ -29,8 +29,8 @@ int main(){
 	//                      INPUT PARAMETERS
 	//---------------------------------------------------------------
 	// Data file info
-	std::string dataFile = "data_in/AIRY_d1p5mm.pgm";					// Input data file, pgm
-	std::string resultFile = "data_out/RONCHI1_airy_d1p5mm.png";		// Output fata file, png
+	std::string dataFile = "bin/data_in/AIRY_d1p5mm.pgm";					// Input data file, pgm
+	std::string resultFile = "bin/data_out/RONCHI1_airy_d1p5mm.png";		// Output fata file, png
 	double xAiry = 876, yAiry = 730;							// position of the airy pattern's center, in pixels
 	double drBin = 1;											// Size of the radial bin step, in pixels
 	double radius = 40;											// Radius of the pattern to gather, in pixels
