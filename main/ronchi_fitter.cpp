@@ -28,7 +28,7 @@ int main(){
 	//---------------------------------------------------------------
 	// Data file info
 	std::string dataFile = "bin/data_in/RONCHI1_d8p15mm_s0p061ms.csv";		// Input data file, csv
-	std::string resultFile = "bin/data_out/RONCHI1_d8p15mm_s0p061ms.png";	// Output fata file, png
+	std::string resultFile = "bin/data_out/RONCHI1_d8p15mm_s0p061ms_FIT.png";	// Output fata file, png
 	// Physical System
 	double pixelToDist = ((3.69e-6)/0.5055);					// Conversion constant from pixels to real life distance, in metres 
 	double pixelToDist_err = (3.69e-6)*0.0073/(0.5055*0.5055);	// Error of the conversion factor, in metres
@@ -58,7 +58,7 @@ int main(){
 	int xNdiv = -512;											// Number of divisions in x axis, root notation
 	int yNdiv = -610;											// Number of divisions in y axis, root notation
 	int fNpoints = 1000;										// Number of points used in the display of the fitting function.
-	float textLocation[4] = {0.525,0.525,0.95,0.95};			// Relative coordinates of the text, {x1rel,y1rel,x2rel,y2rel}
+	float textLocation[4] = {0.53,0.45,0.95,0.95};			// Relative coordinates of the text, {x1rel,y1rel,x2rel,y2rel}
 	int imageScaling = 140;
 
 	//---------------------------------------------------------------
@@ -108,7 +108,7 @@ int main(){
     g->SetMarkerStyle(20);
     g->SetMarkerColor(kAzure+2);
     g->SetLineColor(kBlue+2);
-    g->SetMarkerSize(0.5);
+    g->SetMarkerSize(1.2);
 
     g->GetXaxis()->SetTitle("Distance [m]");
     g->GetXaxis()->SetLimits(0., maxDistance);
@@ -142,16 +142,16 @@ int main(){
 
     TPaveText* pt = new TPaveText(textLocation[0]*maxDistance, textLocation[1]*maxLightValue, textLocation[2]*maxDistance, textLocation[3]*maxLightValue, "user");
 
-    pt->SetTextSize(0.032);
+    pt->SetTextSize(0.038);
     pt->SetFillColor(0);
     pt->SetTextAlign(12);
     pt->SetTextFont(42);
 
     pt->AddText(Form("I = |E_{0}|^{2} (sin(#pia#nu)/(#pi#nu))^{2} (sin(#pimd#nu)/sin(#pid#nu))^{2}"));
-    pt->AddText(Form("E_{0} = %.0f %c %.0f [light value]", f->GetParameter(0), 0xB1, f->GetParError(0)));
+	//pt->AddText(Form("E_{0} = %.0f %c %.0f [light value]", f->GetParameter(0), 0xB1, f->GetParError(0)));
     pt->AddText(Form("a = %.6f %c %.6f [mm]", f->GetParameter(1)*1e3, 0xB1, f->GetParError(1)*1e3));
-	pt->AddText(Form("x_{0} = %.5f %c %.5f [mm]", f->GetParameter(2)*1e3, 0xB1, f->GetParError(2)*1e3));
-	pt->AddText(Form("C = %.0f %c %.0f [light value]", f->GetParameter(3), 0xB1, f->GetParError(3)));
+	//pt->AddText(Form("x_{0} = %.5f %c %.5f [mm]", f->GetParameter(2)*1e3, 0xB1, f->GetParError(2)*1e3));
+	//pt->AddText(Form("C = %.0f %c %.0f [light value]", f->GetParameter(3), 0xB1, f->GetParError(3)));
 	pt->AddText(Form("d = %.6f %c %.6f [mm]", f->GetParameter(4)*1e3, 0xB1, f->GetParError(4)*1e3));
 	pt->AddText(Form("m = %.5f %c %.5f [unitless]", f->GetParameter(5), 0xB1, f->GetParError(5)));
 
