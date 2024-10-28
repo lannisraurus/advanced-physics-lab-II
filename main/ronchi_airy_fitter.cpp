@@ -29,8 +29,8 @@ int main(){
 	//                      INPUT PARAMETERS
 	//---------------------------------------------------------------
 	// Data file info
-	std::string dataFile = "bin/data_in/AIRY_d1p5mm.pgm";					// Input data file, pgm
-	std::string resultFile = "bin/data_out/RONCHI1_airy_d1p5mm.png";		// Output fata file, png
+	std::string dataFile = "bin/data_in/AIRY_d5p5mm.pgm";					// Input data file, pgm
+	std::string resultFile = "bin/data_out/RONCHI1_airy_d5p5mm.png";		// Output fata file, png
 	double xAiry = 876, yAiry = 730;							// position of the airy pattern's center, in pixels
 	double drBin = 1;											// Size of the radial bin step, in pixels
 	double radius = 40;											// Radius of the pattern to gather, in pixels
@@ -40,11 +40,11 @@ int main(){
 	double laser_wavelength = 633e-9;							// Wavelength of the light, in metres
 	double focal_length = 250e-3;								// Focal length of the fourier transform lens, in metres
 	// Fit initial parameters
-	double fit_E_0 = 88267900;									// Amplitude of the airy pattern, in light value
-	double fit_a = 0.940e-3;									// Aperture radius, in metres
-	double fit_C = 1845;										// Background light, in light value
+	double fit_E_0 = 15267900;									// Amplitude of the airy pattern, in light value
+	double fit_a = 2.7e-3;									// Aperture radius, in metres
+	double fit_C = 1045;										// Background light, in light value
 	// Display Settings
-	int maxLightValue = 60000;									// Y Axis maximum value
+	int maxLightValue = 22000;									// Y Axis maximum value
 	double maxDistance = 0.3e-3;								// X Axis maximum value
 	int xNdiv = -512;											// Number of divisions in x axis, root notation
 	int yNdiv = -610;											// Number of divisions in y axis, root notation
