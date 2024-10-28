@@ -27,8 +27,8 @@ int main(){
 	//                      INPUT PARAMETERS
 	//---------------------------------------------------------------
 	// Data file info
-	std::string dataFile = "bin/data_in/RONCHI1_d8p15mm_s32p8ms_diffraction_intensities.csv";	// Input data file, csv
-	std::string resultFile = "bin/data_out/RONCHI1_d8p15mm_s32p8ms_envelope_fit.png";			// Output fata file, png
+	std::string dataFile = "bin/data_in/RONCHI1_intensities.csv";				// Input data file, csv
+	std::string resultFile = "bin/data_out/RONCHI1_d8p15mm_envelope_fit.png";	// Output fata file, png
 	// Physical System
 	double pixelToDist = ((3.69e-6)/0.5055);					// Conversion constant from pixels to real life distance, in metres 
 	double pixelToDist_err = (3.69e-6)*0.0073/(0.5055*0.5055);	// Error of the conversion factor, in metres
@@ -39,17 +39,17 @@ int main(){
 	// Data filtering
 	int noiseThreshold = 1010;
 	// Fit initial parameters	
-	double fit_E_0 = 64000*pixelToDist/lambdaf;
+	double fit_E_0 = 1540000*pixelToDist/lambdaf;
 	double fit_x0 = 960*pixelToDist;
 	double fit_C = 1000;
-	double fit_a = 0.0052/pixelToDist*lambdaf;
+	double fit_a = 0.008/pixelToDist*lambdaf;
 	// Fitting Freedom
-	double dfit_E_0 = 10000*pixelToDist/lambdaf;
-	double dfit_x0 = 200*pixelToDist;
-	double dfit_C = 160;
-	double dfit_a = 0.01/pixelToDist*lambdaf;
+	double dfit_E_0 = 10000000*pixelToDist/lambdaf;
+	double dfit_x0 = 200000*pixelToDist;
+	double dfit_C = 160000;
+	double dfit_a = 1000/pixelToDist*lambdaf;
 	// Display Settings
-	int maxLightValue = 120000;									// Y Axis maximum value
+	int maxLightValue = 20000000;									// Y Axis maximum value
 	double maxDistance = 1.5e-2;								// X Axis maximum value
 	int xNdiv = -1006;											// Number of divisions in x axis, root notation
 	int yNdiv = -612;											// Number of divisions in y axis, root notation
@@ -148,7 +148,8 @@ int main(){
     pt->AddText(Form("#chi^{2}/ndf = %.2f", float(f->GetChisquare()/f->GetNDF()) ));
      
     g->Draw("AP");
-    pt->Draw("same");
+	f->Draw("same");
+    //pt->Draw("same");
     
     C->Update();
     C->SaveAs(resultFile.c_str());

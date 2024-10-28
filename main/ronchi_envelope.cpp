@@ -27,8 +27,8 @@ int main(){
 	//                      INPUT PARAMETERS
 	//---------------------------------------------------------------
 	// Data file info
-	std::string dataFile = "bin/data_in/RONCHI1_d8p15mm_s0p061ms.csv";			// Input data file, csv
-	std::string resultFile = "bin/data_out/RONCHI1_d8p15mm_s0p061ms_PLOT.png";	// Output fata file, png
+	std::string dataFile = "bin/data_in/RONCHI1_d8p15mm_s0p061ms.csv";				// Input data file, csv
+	std::string resultFile = "bin/data_out/RONCHI1_d8p15mm_s0p061ms_ENVELOPE.png";	// Output fata file, png
 	// Physical System
 	double pixelToDist = ((3.69e-6)/0.5055);					// Conversion constant from pixels to real life distance, in metres 
 	double pixelToDist_err = (3.69e-6)*0.0073/(0.5055*0.5055);	// Error of the conversion factor, in metres
@@ -37,14 +37,19 @@ int main(){
 	double focal_length = 250e-3;								// Focal length of the fourier transform lens, in metres
 	double lambdaf = laser_wavelength*focal_length;
 	// Display Settings
-	int maxLightValue = 55000;									// Y Axis maximum value
-	double minDistance = 0.0035;
-	double maxDistance = 0.0105;									// X Axis maximum value
-	int xNdiv = -512;											// Number of divisions in x axis, root notation
-	int yNdiv = -610;											// Number of divisions in y axis, root notation
+	int maxLightValue = 175000;									// Y Axis maximum value
+	double minDistance = 0.0035;								// X Axis minimum value
+	double maxDistance = 0.0105;								// X Axis maximum value
+	int xNdiv = -514;											// Number of divisions in x axis, root notation
+	int yNdiv = -507;											// Number of divisions in y axis, root notation
 	int fNpoints = 1000;										// Number of points used in the display of the fitting function.
-	float textLocation[4] = {0.525,0.525,0.95,0.95};			// Relative coordinates of the text, {x1rel,y1rel,x2rel,y2rel}
+	float textLocation[4] = {0.725,0.525,0.98,0.98};			// Relative coordinates of the text, {x1rel,y1rel,x2rel,y2rel}
 	int imageScaling = 140;
+	// Fit initial parameters	
+	double fit_E_0 = 60000*pixelToDist/lambdaf;
+	double fit_x0 = 960*pixelToDist;
+	double fit_C = 1000;
+	double fit_a = 1.3e-4;
 
 	//---------------------------------------------------------------
 	//                           ALGORITHM
@@ -108,7 +113,56 @@ int main(){
     g->GetYaxis()->SetNdivisions(yNdiv);
     
     g->Draw("AP");
-    
+
+	// New Plot and Fit
+	std::vector<double> xMaxs = {516,695,870,1045,1220,1396};
+	std::vector<double> yMaxs, xMaxsErr, yMaxsErr;
+	for (int i = 0; i < xMaxs.size(); i++){
+		yMaxs.push_back(Y[xMaxs[i]]);
+		xMaxsErr.push_back(eX[xMaxs[i]]);
+		yMaxsErr.push_back(eY[xMaxs[i]]);
+		xMaxs[i] = X[xMaxs[i]];
+		printf("> %f +- %f  ---> %f +- %f\n",xMaxs[i],xMaxsErr[i],yMaxs[i],yMaxsErr[i]);
+	}
+    TGraphErrors* g2 = new TGraphErrors(xMaxs.size(), xMaxs.data(), yMaxs.data(), xMaxsErr.data(), yMaxsErr.data());
+	g2->SetMarkerStyle(20);
+    g2->SetMarkerColor(kGreen+2);
+    g2->SetLineColor(kGreen+2);
+	g2->SetLineWidth(2);
+    g2->SetMarkerSize(1.75);
+
+	TF1* f = new TF1("f" , "pow( [0]*sin(TMath::Pi()*[1]*(x-[2])/[4]) / (TMath::Pi()*(x-[2])/[4]) , 2) + [3]" , 0 , maxDistance); 
+
+    f->SetLineColor(kBlack);
+    f->SetLineWidth(3);
+	
+	f->SetParameters(fit_E_0, fit_a, fit_x0, fit_C, lambdaf);	
+	f->FixParameter(4,lambdaf);
+    f->SetNpx(fNpoints);
+
+    f->SetLineColor(kGreen+2);
+
+    g2->Fit("f");
+
+    TPaveText* pt = new TPaveText(textLocation[0]*maxDistance, textLocation[1]*maxLightValue, textLocation[2]*maxDistance, textLocation[3]*maxLightValue, "user");
+
+    pt->SetTextSize(0.032);
+    pt->SetFillColor(0);
+    pt->SetTextAlign(12);
+    pt->SetTextFont(42);
+
+    pt->AddText(Form("I = |E_{0}|^{2} (sin(#pia#nu)/(#pi#nu))^{2}"));
+    pt->AddText(Form("E_{0} = %.0f %c %.0f [light value]", f->GetParameter(0), 0xB1, f->GetParError(0)));
+    pt->AddText(Form("a = %.4f %c %.4f [mm]", f->GetParameter(1)*1e3, 0xB1, f->GetParError(1)*1e3));
+	pt->AddText(Form("x_{0} = %.4f %c %.4f [mm]", f->GetParameter(2)*1e3, 0xB1, f->GetParError(2)*1e3));
+	pt->AddText(Form("C = %.0f %c %.0f [light value]", f->GetParameter(3), 0xB1, f->GetParError(3)));
+
+    pt->AddText(Form("#chi^{2}/ndf = %.2f", float(f->GetChisquare()/f->GetNDF()) ));
+     
+    g2->Draw("P same");
+	//f->Draw("same");
+    pt->Draw("same");
+
     C->Update();
     C->SaveAs(resultFile.c_str());
     C->Clear();
