@@ -58,7 +58,7 @@ int main(){
 	int xNdiv = -512;											// Number of divisions in x axis, root notation
 	int yNdiv = -610;											// Number of divisions in y axis, root notation
 	int fNpoints = 1000;										// Number of points used in the display of the fitting function.
-	float textLocation[4] = {0.53,0.45,0.95,0.95};			// Relative coordinates of the text, {x1rel,y1rel,x2rel,y2rel}
+	float textLocation[4] = {0.55,0.45,0.95,0.95};			// Relative coordinates of the text, {x1rel,y1rel,x2rel,y2rel}
 	int imageScaling = 140;
 
 	//---------------------------------------------------------------
