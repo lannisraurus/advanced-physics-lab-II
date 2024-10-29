@@ -116,7 +116,7 @@ int main(){
     f->SetLineColor(kBlack);
     f->SetLineWidth(2.5);
 	
-	f->SetParameters(lambdaf,0.00015,0.005);	
+	f->SetParameters(lambdaf,0.0002,0.005);	
 	f->FixParameter(0,lambdaf);
     f->SetNpx(fNpoints);
 

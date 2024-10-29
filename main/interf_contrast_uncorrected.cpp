@@ -28,7 +28,7 @@ int main(){
 	//---------------------------------------------------------------
 	
 	// Interferometer distances and aquired interference patterns
-	std::string resultFile = "bin/data_out/Interferometry_Contrast_vs_Distance.png";
+	std::string resultFile = "bin/data_out/Interferometry_Contrast_vs_Distance_UNCORRECTED.png";
 	std::vector<std::string> dataFiles = {
 		"bin/data_in/Interf2_calha_d3p0mm.csv",
 		"bin/data_in/Interf2_calha_d51p5mm.csv",
@@ -66,12 +66,12 @@ int main(){
 	double maxThreshold = 0.05;
 
 	// Display Settings (ROOT CERN)
-	double maxContrast = 1.2;										// Y Axis maximum value
+	double maxContrast = 1;										// Y Axis maximum value
 	double deltaDistances[2] = {-200.0, 1200.0};				// X Axis maximum value
 	int xNdiv = -514;											// Number of divisions in x axis, root notation
-	int yNdiv = -512;											// Number of divisions in y axis, root notation
+	int yNdiv = -510;											// Number of divisions in y axis, root notation
 	int fNpoints = 1000;										// Number of points used in the display of the fitting function.
-	float textLocation[4] = {325,0.7,700,1.15};					// Relative coordinates of the text, {x1rel,y1rel,x2rel,y2rel}
+	float textLocation[4] = {325,0.6,700,0.95};					// Relative coordinates of the text, {x1rel,y1rel,x2rel,y2rel}
 	int imageScaling = 140;
 
 	// Fit Parameters
@@ -102,9 +102,7 @@ int main(){
 		   maxErrTemp = 0, minErrTemp = 0,
 		   k = 0, kErr = 0,
 		   averageValue = 0;
-	double background = 0;
-	bool take_background = true;
-
+	
 	// Useful vars
 	std::vector<double> kVec;
 	std::vector<double> kErrVec;
@@ -164,15 +162,11 @@ int main(){
 			minErrTemp = std::abs(avgMin - minimums[i]);
 			if (minErrTemp > minErr) minErr = minErrTemp;
 		}
-		if(take_background){
-			background = avgMin;
-			take_background = false;
-		}
 		// Print results of averages max and min and their errors.
 		printf("Average Maximum: %.5f +/- %.5f [light value]   |   ", avgMax, maxErr);
 		printf("Average Minimum: %.5f +/- %.5f [light value]   |   ", avgMin, minErr);
 		// Find contrast
-		k = (avgMax - avgMin) / (avgMax + avgMin - 2*background);
+		k = (avgMax - avgMin) / (avgMax + avgMin);
 		kErr = 2 * ( 1 / pow(avgMax + avgMin, 2) ) * (avgMin*maxErr + avgMax*minErr);
 		printf("Contrast: %.5f +/- %.5f\n", k, kErr);
 		// Close File
