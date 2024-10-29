@@ -27,12 +27,12 @@ int main(){
 	//                      INPUT PARAMETERS
 	//---------------------------------------------------------------
 	// Data file info
-	std::string dataFile = "bin/data_in/TEM1_ROW_s13p384ms.csv";				// Input data file, csv
-	std::string resultFile = "bin/data_out/TEM1_ROW_s13p384ms_ENVELOPE.png";	// Output fata file, png
+	std::string dataFile = "bin/data_in/TEM3_ROW_s47p810ms.csv";				// Input data file, csv
+	std::string resultFile = "bin/data_out/TEM3_ROW_s47p810ms_ENVELOPE.png";	// Output fata file, png
 	// Physical System
 	double pixelToDist = ((3.69e-6)/0.5055);					// Conversion constant from pixels to real life distance, in metres 
 	double pixelToDist_err = (3.69e-6)*0.0073/(0.5055*0.5055);	// Error of the conversion factor, in metres
-	double pixelMeasureOffset = 6.9e-3;							// Where is the center of the measure, to propagate error? in metres
+	double pixelMeasureOffset = 7.05e-3;						// Where is the center of the measure, to propagate error? in metres
 	double laser_wavelength = 633e-9;							// Wavelength of the light, in metres
 	double focal_length = 250e-3;								// Focal length of the fourier transform lens, in metres
 	double lambdaf = laser_wavelength*focal_length;
@@ -46,10 +46,10 @@ int main(){
 	float textLocation[4] = {0.65,0.525,0.98,0.98};			// Relative coordinates of the text, {x1rel,y1rel,x2rel,y2rel}
 	int imageScaling = 140;
 	// Fit initial parameters	
-	double fit_E_0 = 6792772;
-	double fit_x0 = 6.9e-3;
-	double fit_C = 1000;
-	double fit_a = 0.038e-3;
+	double fit_E_0 = 8985967;
+	double fit_x0 = 7.05e-3;
+	double fit_C = 950;
+	double fit_a = 0.04e-3;
 
 	//---------------------------------------------------------------
 	//                           ALGORITHM
@@ -115,7 +115,7 @@ int main(){
     g->Draw("AP");
 
 	// New Plot and Fit
-	std::vector<double> xMaxs = {28,227,596,771,1120,1297,1870,1672};
+	std::vector<double> xMaxs = {470,846,878,897,1041,1460};
 	std::vector<double> yMaxs, xMaxsErr, yMaxsErr;
 	for (int i = 0; i < xMaxs.size(); i++){
 		yMaxs.push_back(Y[xMaxs[i]]);
@@ -138,7 +138,9 @@ int main(){
 	
 	f->SetParameters(fit_E_0, fit_a, fit_x0, fit_C, lambdaf);	
 	f->FixParameter(4,lambdaf);
-	f->SetParLimits(3, 900, 900000000);
+	f->FixParameter(3,fit_C);
+	f->FixParameter(2,fit_x0);
+	//f->SetParLimits(2, 0.006, 0.008);
     f->SetNpx(fNpoints);
 
     f->SetLineColor(kGreen+2);
@@ -155,8 +157,8 @@ int main(){
     pt->AddText(Form("I = |E_{0}|^{2} (sin(#pia#nu)/(#pi#nu))^{2}"));
     pt->AddText(Form("E_{0} = %.0f %c %.0f [light value]", f->GetParameter(0), 0xB1, f->GetParError(0)));
     pt->AddText(Form("a = %.5f %c %.5f [mm]", f->GetParameter(1)*1e3, 0xB1, f->GetParError(1)*1e3));
-	pt->AddText(Form("x_{0} = %.3f %c %.3f [mm]", f->GetParameter(2)*1e3, 0xB1, f->GetParError(2)*1e3));
-	pt->AddText(Form("C = %.0f %c %.3f [light value]", f->GetParameter(3), 0xB1, f->GetParError(3)));
+	pt->AddText(Form("x_{0} = %.3f (fixed) [mm]", f->GetParameter(2)*1e3, 0xB1, f->GetParError(2)*1e3));
+	pt->AddText(Form("C = %.0f (fixed) [light value]", f->GetParameter(3), 0xB1, f->GetParError(3)));
 
     pt->AddText(Form("#chi^{2}/ndf = %.2f", float(f->GetChisquare()/f->GetNDF()) ));
      

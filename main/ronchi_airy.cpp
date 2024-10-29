@@ -29,25 +29,25 @@ int main(){
 	//                      INPUT PARAMETERS
 	//---------------------------------------------------------------
 	// Data file info
-	std::string dataFile = "bin/data_in/AIRY_d5p5mm.pgm";					// Input data file, pgm
-	std::string resultFile = "bin/data_out/RONCHI1_airy_d5p5mm.png";		// Output fata file, png
+	std::string dataFile = "bin/data_in/AIRY_d8p15mm.pgm";					// Input data file, pgm
+	std::string resultFile = "bin/data_out/RONCHI1_airy_d8p15mm.png";		// Output fata file, png
 	double xAiry = 876, yAiry = 730;							// position of the airy pattern's center, in pixels
-	double drBin = 1;											// Size of the radial bin step, in pixels
-	double radius = 40;											// Radius of the pattern to gather, in pixels
+	double drBin = 0.001;											// Size of the radial bin step, in pixels
+	double radius = 25;											// Radius of the pattern to gather, in pixels
 	// Physical System
 	double pixelToDist = ((3.69e-6)/0.5055);					// Conversion constant from pixels to real life distance, in metres 
 	double pixelToDist_err = (3.69e-6)*0.0073/(0.5055*0.5055);	// Error of the conversion factor, in metres
 	double laser_wavelength = 633e-9;							// Wavelength of the light, in metres
 	double focal_length = 250e-3;								// Focal length of the fourier transform lens, in metres
 	// Fit initial parameters
-	double fit_E_0 = 15267900;									// Amplitude of the airy pattern, in light value
-	double fit_a = 2.7e-3;									// Aperture radius, in metres
-	double fit_C = 1045;										// Background light, in light value
+	double fit_E_0 = 5829660;									// Amplitude of the airy pattern, in light value
+	double fit_a = 3.59e-3;									// Aperture radius, in metres
+	double fit_C = 880;										// Background light, in light value
 	// Display Settings
-	int maxLightValue = 22000;									// Y Axis maximum value
+	int maxLightValue = 60000;									// Y Axis maximum value
 	double maxDistance = 0.3e-3;								// X Axis maximum value
 	int xNdiv = -512;											// Number of divisions in x axis, root notation
-	int yNdiv = -610;											// Number of divisions in y axis, root notation
+	int yNdiv = -612;											// Number of divisions in y axis, root notation
 	int fNpoints = 1000;										// Number of points used in the display of the fitting function.
 	float textLocation[4] = {0.5,0.5,0.9,0.9};					// Relative coordinates of the text, {x1rel,y1rel,x2rel,y2rel}
 	int imageScaling = 140;
