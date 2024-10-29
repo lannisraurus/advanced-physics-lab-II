@@ -91,8 +91,9 @@ int main(){
     g->SetTitle( (dataFile+" - Diffraction Maxs. Linear Fit").c_str() );
     g->SetMarkerStyle(20);
     g->SetMarkerColor(kAzure+2);
-    g->SetLineColor(kBlue+2);
-    g->SetMarkerSize(0.5);
+	g->SetLineWidth(2);
+    g->SetLineColor(kBlack);
+    g->SetMarkerSize(1.6);
 
     g->GetXaxis()->SetTitle("Diffraction Index [unitless]");
     g->GetXaxis()->SetLimits(0., maxX);
@@ -110,7 +111,7 @@ int main(){
     TF1* f = new TF1("f" , "([0]/[1])*x + [2]" , 0 , maxX); 
 
     f->SetLineColor(kBlack);
-    f->SetLineWidth(2);
+    f->SetLineWidth(2.5);
 	
 	f->SetParameters(lambdaf,0,0);	
 	f->FixParameter(0,lambdaf);
@@ -131,7 +132,7 @@ int main(){
 
     pt->AddText(Form("#chi^{2}/ndf = %.2f", float(f->GetChisquare()/f->GetNDF()) ));
      
-    g->Draw("AP");
+	g->Draw("AP");
     pt->Draw("same");
     
     C->Update();

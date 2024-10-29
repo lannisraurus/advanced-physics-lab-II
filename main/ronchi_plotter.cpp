@@ -92,7 +92,7 @@ int main(){
     g->SetMarkerColor(kAzure+2);
     g->SetLineColor(kBlue+2);
 	g->SetLineWidth(2);
-    g->SetMarkerSize(2);
+    g->SetMarkerSize(0.8);
 
     g->GetXaxis()->SetTitle("Distance [m]");
     g->GetXaxis()->SetLimits(minDistance, maxDistance);
@@ -107,7 +107,7 @@ int main(){
     g->GetYaxis()->SetRangeUser(0., maxLightValue);
     g->GetYaxis()->SetNdivisions(yNdiv);
     
-    g->Draw("AL");
+    g->Draw("AP");
     
     C->Update();
     C->SaveAs(resultFile.c_str());
