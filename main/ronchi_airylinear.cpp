@@ -34,14 +34,14 @@ int main(){
 	double focal_length = 250e-3;								// Focal length of the fourier transform lens, in metres
 	double lambdaf = laser_wavelength*focal_length;
 	// Display Settings
-	double maxY = 0.012;							// Y Axis maximum value
+	double maxY = 0.12;							// Y Axis maximum value
 	double minY = 0.00;
-	double maxX = 2;								// X Axis maximum value
-	double minX = -2;
-	int xNdiv = -512;									// Number of divisions in x axis, root notation
+	double maxX = 0.7;								// X Axis maximum value
+	double minX = 0;
+	int xNdiv = -514;									// Number of divisions in x axis, root notation
 	int yNdiv = -512;									// Number of divisions in y axis, root notation
 	int fNpoints = 1000;								// Number of points used in the display of the fitting function.
-	float textLocation[4] = {0.32,0.1,0.7,0.5};	// Relative coordinates of the text, {x1rel,y1rel,x2rel,y2rel}
+	float textLocation[4] = {0.55,0.1,0.9,0.5};	// Relative coordinates of the text, {x1rel,y1rel,x2rel,y2rel}
 	int imageScaling = 140;
 
 	//---------------------------------------------------------------
@@ -74,9 +74,9 @@ int main(){
 		ss >> D >> D_err >> R >> R_err;
 		ss.clear();
 
-		X.push_back(D);
+		X.push_back(1./D);
 		Y.push_back(R);
-		eX.push_back(D_err);
+		eX.push_back(D_err/(D*D));
 		eY.push_back(R_err);
 
 		printf("(%f,%f) +- (%f,%f)\n",X.back(),Y.back(), eX.back(),eY.back());
@@ -87,14 +87,14 @@ int main(){
 	TCanvas* C = new TCanvas("C", "Canvas", 16*imageScaling, 9*imageScaling);
     TGraphErrors* g = new TGraphErrors(X.size(), X.data(), Y.data(), eX.data(), eY.data());
 
-    g->SetTitle( (dataFile+" - Diffraction Maxs. Linear Fit").c_str() );
+    g->SetTitle( (dataFile+" - Airy Radius vs. Aperture Diameter").c_str() );
     g->SetMarkerStyle(20);
     g->SetMarkerColor(kAzure+2);
 	g->SetLineWidth(2);
     g->SetLineColor(kBlack);
     g->SetMarkerSize(1.6);
 
-    g->GetXaxis()->SetTitle("Diffraction Index [unitless]");
+    g->GetYaxis()->SetTitle("Airy Radius [mm]");
     g->GetXaxis()->SetLimits(minX, maxX);
     g->GetXaxis()->SetNdivisions(xNdiv);
     g->GetXaxis()->SetLabelSize(0.028);
@@ -102,12 +102,12 @@ int main(){
     g->GetXaxis()->SetLabelOffset(0.033);
     g->GetXaxis()->SetTitleOffset(1.3);
 
-    g->GetYaxis()->SetTitle("Distance [m]");
+    g->GetXaxis()->SetTitle("(Aperture Diameter)^{-1} [mm^{-1}]");
     g->GetYaxis()->SetLabelSize(0.028);
     g->GetYaxis()->SetRangeUser(minY, maxY);
     g->GetYaxis()->SetNdivisions(yNdiv);
 
-    TF1* f = new TF1("f" , "([0]/[1])*x + [2]" , minX , maxX); 
+    TF1* f = new TF1("f" , "([0]*[1])*x + [2]" , minX , maxX); 
 
     f->SetLineColor(kBlack);
     f->SetLineWidth(2.5);
@@ -125,14 +125,14 @@ int main(){
     pt->SetTextAlign(12);
     pt->SetTextFont(42);
 
-    pt->AddText(Form("x = (#lambdaf/d)n + b"));
-    pt->AddText(Form("d = %.5f %c %.5f [mm]", f->GetParameter(1)*1e3, 0xB1, f->GetParError(1)*1e3));
-    pt->AddText(Form("b = %.3f %c %.3f [mm]", f->GetParameter(2)*1e3, 0xB1, f->GetParError(2)*1e3));
+    pt->AddText(Form("R_{airy} = A #lambdaf (1/D) + C"));
+    pt->AddText(Form("A = %.3f %c %.3f [unitless]", f->GetParameter(1)*1e-6, 0xB1, f->GetParError(1)*1e-6));
+    pt->AddText(Form("C = %.5f %c %.5f [mm]", f->GetParameter(2), 0xB1, f->GetParError(2)));
 
     pt->AddText(Form("#chi^{2}/ndf = %.2f", float(f->GetChisquare()/f->GetNDF()) ));
     printf("CHI2: %f",float(f->GetChisquare()/f->GetNDF()) );
 
-	g->Draw("AP");
+	g->Draw("AP*");
 	//f->Draw("same");
     pt->Draw("same");
     
