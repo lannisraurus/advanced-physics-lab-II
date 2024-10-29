@@ -67,20 +67,20 @@ int main(){
 
 	// Display Settings (ROOT CERN)
 	double maxContrast = 1;										// Y Axis maximum value
-	double deltaDistances[2] = {-100.0, 600.0};					// X Axis maximum value
+	double deltaDistances[2] = {-200.0, 1200.0};				// X Axis maximum value
 	int xNdiv = -514;											// Number of divisions in x axis, root notation
 	int yNdiv = -510;											// Number of divisions in y axis, root notation
 	int fNpoints = 1000;										// Number of points used in the display of the fitting function.
-	float textLocation[4] = {100,0.7,400,0.97};					// Relative coordinates of the text, {x1rel,y1rel,x2rel,y2rel}
+	float textLocation[4] = {325,0.55,700,0.97};					// Relative coordinates of the text, {x1rel,y1rel,x2rel,y2rel}
 	int imageScaling = 140;
 
 	// Fit Parameters
-	double fit_a = 0.0075;
-	double fit_c = -0.2;
+	double fit_a = 0.0075/2.;
+	double fit_c = 1;
 	double fit_x0 = 0;
-	double dfit_a = 0.01;
-	double dfit_c = 0.5;
-	double dfit_x0 = 50;
+	double dfit_a = 0.1;
+	double dfit_c = 1;
+	double dfit_x0 = 200;
 
 	//---------------------------------------------------------------
 	//                           ALGORITHM
@@ -181,6 +181,8 @@ int main(){
 	for (int i = 0; i < distances.size(); i++){
 		distances[i] = L2a + L2i + distances[i] + D - L1;
 		distancesErr[i] = L2aErr + L2iErr + distancesErr[i] + DErr + L1Err;
+		distances[i] *= 2;
+		distancesErr[i] *= 2;
 		printf("(%.5f +/- %.5f)   ", distances[i], distancesErr[i]);
 	}printf("\n");
 
@@ -188,19 +190,18 @@ int main(){
 	// Plot and Fit
 	TCanvas* C = new TCanvas("C", "Canvas", 16*imageScaling, 9*imageScaling);
     TGraphErrors* g = new TGraphErrors(distances.size(), distances.data(), kVec.data(), distancesErr.data(), kErrVec.data());
-    TF1* f = new TF1("f" , "abs(cos([0]*(x-[2]))) + [1]" , deltaDistances[0] , deltaDistances[1]);
+    TF1* f = new TF1("f" , "abs(cos([0]*(x-[2])))*[1]" , deltaDistances[0] , deltaDistances[1]);
 
 	f->SetParameters(fit_a,fit_c,fit_x0);
 	f->SetParLimits(0, fit_a - dfit_a, fit_a + dfit_a);
 	f->SetParLimits(1, fit_c - dfit_c, fit_c + dfit_c);
 	f->SetParLimits(2, fit_x0 - dfit_x0, fit_x0 + dfit_x0);
-
 	
     g->SetTitle( "Contrast vs. #DeltaL" );
     g->SetMarkerStyle(20);
     g->SetMarkerColor(kAzure+2);
     g->SetLineColor(kBlue+2);
-    g->SetMarkerSize(1.0);
+    g->SetMarkerSize(1.4);
 
     g->GetXaxis()->SetTitle("Difference in Distance [mm]");
     g->GetXaxis()->SetLimits(deltaDistances[0], deltaDistances[1]);
@@ -228,11 +229,11 @@ int main(){
     pt->SetTextAlign(12);
     pt->SetTextFont(42);
 
-    pt->AddText(Form("K = |cos(a(x-x_{0}))|^{2} + C"));
+    pt->AddText(Form("K = A|cos(a(x-x_{0}))|"));
     pt->AddText(Form("a = %.5f %c %.5f [mm^{-1}]", f->GetParameter(0), 0xB1, f->GetParError(0)));
-    pt->AddText(Form("C = (%.3f %c %.3f) [unitless]", f->GetParameter(1), 0xB1, f->GetParError(1)));
+    pt->AddText(Form("A = (%.3f %c %.3f) [unitless]", f->GetParameter(1), 0xB1, f->GetParError(1)));
 	pt->AddText(Form("x_{0} = %.0f %c %.0f [mm]", f->GetParameter(2), 0xB1, f->GetParError(2)));
-    pt->AddText(Form("#chi^{2}/ndf = %.2f", float(f->GetChisquare()/f->GetNDF()) ));
+    pt->AddText(Form("#chi^{2}/ndf = %.1f", float(f->GetChisquare()/f->GetNDF()) ));
     
 
     g->Draw("AP");
